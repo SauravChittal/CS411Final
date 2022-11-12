@@ -8,59 +8,205 @@
  </head>
 
  <body>
-<select name="Which Table">
-<option value="red">Students</option>
-<option value="purple">Advisors</option>
+<select name="Which Table" id="tableName">
+<option value="Students">Students</option>
+<option value="Advisors">Advisors</option>
+<option value="Courses">Courses</option>
+<option value="Enrollments">Enrollments</option>
+<option value="Ratings">Ratings</option>
 </select>
-<script type="text/javascript">
-	async function a() {
-		var apiURL = 'http://35.188.191.81/Students/credits/18';
-		const response = await fetch(apiURL);
-		const data = await response.json();
-		console.log(data);
-	}
-	a();
-</script>
-<select name="What Request">
-	<option value="get">GET</option>
-	<option value="post">POST</option>
-	<option value="delete">DELETE</option>
-	<option value="put">PUT</option>
+<select name="What Request" id="requestType">
+	<option value="GET">GET</option>
+	<option value="POST">POST</option>
+	<option value="DELETE">DELETE</option>
+	<option value="PUT">PUT</option>
 </select>
 <form>
 	<label for="Field 1">Field 1</label>
-	<input id="value1" type="text" placeholder="First text field (Fill in as many as needed)">
-	<label for="Field 2">Field 2</label>		
-	<input id="value2" type="text" placeholder="First text field (Fill in as many as needed)">
-	<label for="Field 3">Field 3</label>	
-	<input id="value3" type="text" placeholder="First text field (Fill in as many as needed)">
-	<label for="Field 4">Field 4</label>	
-	<input id="value4" type="text" placeholder="First text field (Fill in as many as needed)">
-	<label for="Field 5">Field 5</label	
-	<input id="value5" type="text" placeholder="First text field (Fill in as many as needed)">
-	<label for="Field 6">Field 6</label>	
-	<input id="value6" type="text" placeholder="First text field (Fill in as many as needed)">
+	<input id="value1" type="text" placeholder="First text field">
 </form>
-<form id="sub">
-	<input id="submit" type="button" value="Submit" placeholder="Submit">Submit</input>
+<form id="firstee">
+	<input type="submit" value="Submit"/>
 </form>
-	>
+<form id="sec">
+	<input type="submit" value="Easy Courses with Good Instructors"/>
+</form>
+<form id="thir">
+	<input type="submit" value="Easy CS Courses"/>
+</form>	
+<div id="placeHold">
+<p></p>
+</div>
 <script>
-	document.getElementById("sub").onsubmit = function () {
-		console.log("Submit was clicked");
+	async function a(table, text) {
+		var apiURL = `http://35.188.191.81/${table}/${text}`;
+		const response = await fetch(apiURL);
+		const data = await response.json();
+		return data;
 	}
+
+	async function post(table, text) {
+		var apiURL = `http://35.188.191.81/${table}`;
+		let string = "";
+		const arr = text.split('/');
+		if (table === "Students") {
+			string = `netid=${arr[0]}&advisoremail=${arr[1]}&firstname=${arr[2]}&lastname=${arr[3]}&credits=${arr[4]}`;
+		} else if (table === "Advisors") {
+			string = `email=${arr[0]}&firstname=${arr[1]}&lastname=${arr[2]}&department=${arr[3]}`;
+		} else if (table === "Courses") {
+			string = `crn=${arr[0]}&title=${arr[1]}&department=${arr[2]}&instructor=${arr[3]}`;
+		} else if (table === "Enrollments") {
+			string = `crn=${arr[0]}&netid=${arr[1]}&credits=${arr[2]}`;
+		} else if (table === "Ratings") {
+			string = `ratingid=${arr[0]}&crn=${arr[1]}&title=${arr[2]}&instructor=${arr[3]}&difficulty=${arr[4]}&hoursperweek=${arr[5]}&instructorrating=${arr[6]}<br>`;
+		}
+		console.log(string);
+		const response = await fetch(apiURL, {
+			method: "POST",
+			headers: {
+				"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+			},
+			credentials: 'include',
+			body: string
+		});
+		return await response.json();
+	}
+
+	async function put(table, text) {
+		var apiURL = `http://35.188.191.81/${table}/${text}`;
+		const response = await fetch(apiURL, {
+			method: 'PUT'
+		});
+		return await response.json();
+	}
+
+	async function deleteMyTable(table, text) {
+		var apiURL = `http://35.188.191.81/${table}`;
+		let string = "";
+		const arr = text.split('/');
+		if (table === "Students") {
+			string = `netid=${arr[0]}&advisoremail=${arr[1]}&firstname=${arr[2]}&lastname=${arr[3]}&credits=${arr[4]}`;
+		} else if (table === "Advisors") {
+			string = `email=${arr[0]}&firstname=${arr[1]}&lastname=${arr[2]}&department=${arr[3]}`;
+		} else if (table === "Courses") {
+			string = `crn=${arr[0]}&title=${arr[1]}&department=${arr[2]}&instructor=${arr[3]}`;
+		} else if (table === "Enrollments") {
+			string = `crn=${arr[0]}&netid=${arr[1]}&credits=${arr[2]}`;
+		} else if (table === "Ratings") {
+			string = `ratingid=${arr[0]}&crn=${arr[1]}&title=${arr[2]}&instructor=${arr[3]}&difficulty=${arr[4]}&hoursperweek=${arr[5]}&instructorrating=${arr[6]}<br>`;
+		}
+
+		console.log(string);
+		const response = await fetch(apiURL, {
+			method: "POST",
+			headers: {
+				"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+			},
+			credentials: 'include',
+			body: string
+		});
+		return await response.json();
+	}
+
+	document.getElementById("firstee").onsubmit = function (event) {
+		event.preventDefault();
+		const table = document.getElementById("tableName").value;
+		const request = document.getElementById("requestType").value;
+		const textReq = document.getElementById("value1").value;
+		const textPlace = document.getElementById("placeHold");
+		textPlace.innerHTML = "";
+		if (request === "GET") {
+			const printAdd = async () => {
+				const temp = await a(table, textReq);
+				for (let i in temp) {
+					console.log("Hi");
+				}
+				for (let i = 0; i < temp.length; ++i) {
+					const v = temp[i];
+					if (table === "Students") {
+						textPlace.innerHTML += `NetId = ${v.NetID} AdEmail = ${v.AdvisorEmail} FirstName is ${v.FirstName} LastName is ${v.LastName} and Credits is ${v.Credits}<br>`;
+					} else if (table === "Advisors") {
+						textPlace.innerHTML += `Email = ${v.Email}; FirstName = ${v.FirstName}; LastName = ${v.LastName} and Department = ${v.Department}<br>`;
+					} else if (table === "Courses") {
+						textPlace.innerHTML += `CRN = ${v.CRN}; Title = ${v.Title}; Department = ${v.Department} and Instructor = ${v.Instructor}<br>`;
+					} else if (table === "Enrollments") {
+						textPlace.innerHTML += `CRN = ${v.CRN}; NetID = ${v.NetID} and Credits = ${v.Credits}<br>`;
+					} else if (table === "Ratings") {
+						textPlace.innerHTML += `RatingID = ${v.RatingID}; CRN = ${v.CRN}; Title = ${v.Title}; Instructor = ${v.Instructor}; Difficulty = ${v.Difficulty}; HoursPerWeek = ${v.HoursPerWeek} and InstructorRating = ${v.InstructorRating}<br>`;
+					}
+				}
+			}
+			printAdd();
+		} else if (request === "POST") {
+			console.log("We're in here");
+			const postReq = async () => {
+				const temp = await post(table, textReq);
+				console.log(temp);
+			}
+			postReq();
+		} else if (request === "PUT") {
+			console.log("We in here bois");
+			const putReq = async () => {
+				const temp = await put(table, textReq);
+				console.log(temp);
+			}
+			putReq();
+		} else if (request === "DELETE") {
+			console.log("Finally");
+			const delReq = async () => {
+				const temp = await deleteMyTable(table, textReq);
+				console.log(temp);
+			}
+			delReq();
+		}
+	}
+
+	document.getElementById('sec').onsubmit = function (event) {
+		event.preventDefault();
+		const textArea = document.getElementById('placeHold');
+		textArea.innerHTML = "";
+		const comReq = async () => {
+			var apiURL = `http://35.188.191.81/easyCourses`;
+			const response = await fetch(apiURL);
+			const data = await response.json();
+			return await data;
+		}
+		const actReq = async () => {
+			const temp = await comReq();
+			console.log(temp);
+			for (let i = 0; i < temp.length; ++i) {
+				const v = temp[i];
+				textArea.innerHTML += `CRN = ${v.CRN}; Title is ${v.Title} and Instructor is ${v.Instructor}<br>`;
+			}
+		}
+		actReq();
+	}
+
+	document.getElementById('thir').onsubmit = function (event) {
+		event.preventDefault();
+		const textArea = document.getElementById('placeHold');
+		textArea.innerHTML = "";
+		const comReq = async () => {
+			var apiURL = `http://35.188.191.81/instructorEasyCourse`;
+			const response = await fetch(apiURL);
+			const data = await response.json();
+			return await data;
+		}
+		const actReq = async () => {
+			const temp = await comReq();
+			console.log(temp);
+			for (let i = 0; i < temp.length; ++i) {
+				const v = temp[i];
+				textArea.innerHTML += `CRN = ${v.CRN}; Title is ${v.Title} and Instructor is ${v.Instructor}<br>`;
+			}
+		}
+		actReq();
+	}
+
 </script>
-   <div class="container mt-4">
+ 
+  <div class="container mt-4">
      <div class="card">
-       <div class="card-body">
-         <h2>Please mark your attendance below</h2>
-         <form action="mark" method="POST">
-           <div class="form-group">
-             <label for="netid">Net ID</label>
-             <input type="text" class="form-control col-lg-9" id="netid" aria-describedby="emailHelp" placeholder="Enter Net ID" name="netid">
-           </div>
-           <button type="submit" class="btn btn-primary">Submit</button>
-         </form>
    </div>
  </div>
  </body>
