@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <title>Attendance System</title>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+ </head>
+
+ <body>
+<select name="Which Table">
+<option value="red">Students</option>
+<option value="purple">Advisors</option>
+</select>
+<script type="text/javascript">
+	async function a() {
+		var apiURL = 'http://35.188.191.81/Students/credits/18';
+		const response = await fetch(apiURL);
+		const data = await response.json();
+		console.log(data);
+	}
+	a();
+</script>
+<select name="What Request">
+	<option value="get">GET</option>
+	<option value="post">POST</option>
+	<option value="delete">DELETE</option>
+	<option value="put">PUT</option>
+</select>
+<form>
+	<label for="Field 1">Field 1</label>
+	<input id="value1" type="text" placeholder="First text field (Fill in as many as needed)">
+	<label for="Field 2">Field 2</label>		
+	<input id="value2" type="text" placeholder="First text field (Fill in as many as needed)">
+	<label for="Field 3">Field 3</label>	
+	<input id="value3" type="text" placeholder="First text field (Fill in as many as needed)">
+	<label for="Field 4">Field 4</label>	
+	<input id="value4" type="text" placeholder="First text field (Fill in as many as needed)">
+	<label for="Field 5">Field 5</label	
+	<input id="value5" type="text" placeholder="First text field (Fill in as many as needed)">
+	<label for="Field 6">Field 6</label>	
+	<input id="value6" type="text" placeholder="First text field (Fill in as many as needed)">
+</form>
+<form id="sub">
+	<input id="submit" type="button" value="Submit" placeholder="Submit">Submit</input>
+</form>
+	>
+<script>
+	document.getElementById("sub").onsubmit = function () {
+		console.log("Submit was clicked");
+	}
+</script>
+   <div class="container mt-4">
+     <div class="card">
+       <div class="card-body">
+         <h2>Please mark your attendance below</h2>
+         <form action="mark" method="POST">
+           <div class="form-group">
+             <label for="netid">Net ID</label>
+             <input type="text" class="form-control col-lg-9" id="netid" aria-describedby="emailHelp" placeholder="Enter Net ID" name="netid">
+           </div>
+           <button type="submit" class="btn btn-primary">Submit</button>
+         </form>
+   </div>
+ </div>
+ </body>
+</html>
